@@ -5,6 +5,7 @@ class Plan {
   final double price;
   final bool isSelected;
   final List<Feature> features;
+  final int viewsNumber;
 
   Plan({
     this.id,
@@ -13,6 +14,7 @@ class Plan {
     required this.price,
     this.isSelected = false,
     required this.features,
+    this.viewsNumber = 0,
   });
 
   factory Plan.fromMap(Map<String, dynamic> map) {
@@ -24,6 +26,7 @@ class Plan {
       description: map['description'],
       price: map['price'],
       isSelected: map['isSelected'],
+      viewsNumber: map['viewsNumber'] ?? 0,
       features: featuresList,
     );
   }
@@ -35,6 +38,7 @@ class Plan {
       'description': description,
       'price': price,
       'isSelected': isSelected,
+      'viewsNumber': viewsNumber,
       'features': features.map((e) => e.toMap()).toList(),
     };
   }
@@ -57,6 +61,17 @@ class Plan {
     );
   }
 
+  factory Plan.empty() {
+    return Plan(
+      id: null,
+      name: '',
+      description: '',
+      price: 0.0,
+      isSelected: false,
+      features: [],
+      viewsNumber: 0,
+    );
+  }
   static List<Plan> samplePlans = [
     Plan(
       name: 'أساسية',
@@ -84,6 +99,7 @@ class Plan {
       name: 'إكسترا',
       description: '',
       price: 3000,
+      viewsNumber: 7,
       features: [
         Feature(
           icon: '''
@@ -133,6 +149,7 @@ class Plan {
       name: 'بلس',
       description: 'أفضل قيمة مقابل سعر',
       price: 3500,
+      viewsNumber: 18,
       features: [
         Feature(
           icon: '''

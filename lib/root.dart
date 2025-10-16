@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:otex_app/helper/app_assets.dart';
 import 'package:otex_app/helper/app_colors.dart';
-import 'package:otex_app/views/account_view.dart';
-import 'package:otex_app/views/filter_view.dart';
+import 'package:otex_app/helper/app_strings.dart';
+import 'package:otex_app/helper/app_styles.dart';
+import 'package:otex_app/views/package_view.dart';
 import 'package:otex_app/views/home_view.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -21,13 +22,11 @@ class _RootState extends State<Root> {
   @override
   void initState() {
     screens = [
-      // FilterView(),
       HomeView(),
-      AccountView(),
-
-      Scaffold(backgroundColor: Colors.white, body: Center(child: Text("محادثة"))),
-      Scaffold(backgroundColor: Colors.white, body: Center(child: Text("أضف أعلان"))),
-      Scaffold(backgroundColor: Colors.white, body: Center(child: Text("أعلاناتى"))),
+      Scaffold(backgroundColor: Colors.white, body: Center(child: Text(AppStrings.home))),
+      Scaffold(backgroundColor: Colors.white, body: Center(child: Text(AppStrings.addAd))),
+      Scaffold(backgroundColor: Colors.white, body: Center(child: Text(AppStrings.myAds))),
+      PackageView(),
     ];
     controller = PageController(initialPage: currentScreen);
     super.initState();
@@ -42,14 +41,9 @@ class _RootState extends State<Root> {
         children: screens,
       ),
       bottomNavigationBar: Container(
-        decoration: BoxDecoration(
-          border: Border(
-            top: BorderSide(color: const Color(0xFF000000).withOpacity(0.1), width: 1),
-          ),
-        ),
+        decoration: AppStyles.bottomNavigationBarBoxDecoration,
         child: BottomNavigationBar(
           elevation: 0,
-          // enableFeedback: false,
           backgroundColor: Colors.white,
           type: BottomNavigationBarType.fixed,
           selectedItemColor: AppColors.black,
@@ -63,41 +57,11 @@ class _RootState extends State<Root> {
             controller.jumpToPage(currentScreen);
           },
           items: [
-            BottomNavigationBarItem(
-              icon: SvgPicture.asset(
-                AppAssets.bungalow,
-                color: currentScreen == 0 ? AppColors.black : AppColors.gray,
-              ),
-              label: 'الرئيسية',
-            ),
-            BottomNavigationBarItem(
-              icon: SvgPicture.asset(
-                AppAssets.chat,
-                color: currentScreen == 1 ? AppColors.black : AppColors.gray,
-              ),
-              label: 'محادثة',
-            ),
-            BottomNavigationBarItem(
-              icon: SvgPicture.asset(
-                AppAssets.addBox,
-                color: AppColors.primary,
-              ),
-              label: 'أضف أعلان',
-            ),
-            BottomNavigationBarItem(
-              icon: SvgPicture.asset(
-                AppAssets.dataset,
-                color: currentScreen == 3 ? AppColors.black : AppColors.gray,
-              ),
-              label: 'أعلاناتى',
-            ),
-            BottomNavigationBarItem(
-              icon: SvgPicture.asset(
-                AppAssets.accountCircle,
-                color: currentScreen == 4 ? AppColors.black : AppColors.gray,
-              ),
-              label: 'حسابى',
-            ),
+            BottomNavigationBarItem(icon: SvgPicture.asset(AppAssets.bungalow), label: AppStrings.home),
+            BottomNavigationBarItem(icon: SvgPicture.asset(AppAssets.chat), label: AppStrings.chat),
+            BottomNavigationBarItem(icon: SvgPicture.asset(AppAssets.addBox), label: AppStrings.addAd),
+            BottomNavigationBarItem(icon: SvgPicture.asset(AppAssets.dataset), label: AppStrings.myAds),
+            BottomNavigationBarItem(icon: SvgPicture.asset(AppAssets.accountCircle), label: AppStrings.myAccount),
           ],
         ),
       ),

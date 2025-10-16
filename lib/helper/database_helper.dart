@@ -61,7 +61,8 @@ class DatabaseHelper {
       name TEXT,
       description TEXT,
       price REAL,           
-      isSelected INTEGER,   
+      isSelected INTEGER,
+      viewsNumber INTEGER,   
       features TEXT
     )
   ''');

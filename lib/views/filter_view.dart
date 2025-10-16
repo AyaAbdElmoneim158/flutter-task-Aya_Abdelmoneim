@@ -256,35 +256,6 @@ class _FilterViewState extends State<FilterView> {
   }
 }
 
-class SpecialPlan extends StatelessWidget {
-  const SpecialPlan({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      margin: const EdgeInsets.all(8), // margin: 8px
-      padding: const EdgeInsets.all(8), // padding: 8px
-      decoration: BoxDecoration(
-        color: const Color(0xFFF7F7F7), // background: #F7F7F7
-        borderRadius: BorderRadius.circular(8), // border-radius: 8px
-        border: Border.all(
-          color: const Color(0xFF000000).withOpacity(0.05), // #0000000D
-          width: 1, // border-width: 1px
-        ),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text('باقات مخصصة لك', style: AppStyles.font14BlackMedium),
-          Text('تواصل معنا لأختيار الباقة المناسبة لك', style: AppStyles.font12BlackRegular),
-          Text('فريق المبيعات', style: AppStyles.font16GrayBold.copyWith(color: AppColors.primary)),
-        ],
-      ),
-    );
-  }
-}
-
 class CustomField extends StatelessWidget {
   const CustomField({super.key, this.hintText});
   final String? hintText;

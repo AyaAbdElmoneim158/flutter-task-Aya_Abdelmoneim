@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart' as material;
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
 
