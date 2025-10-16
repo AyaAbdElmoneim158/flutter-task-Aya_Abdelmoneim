@@ -16,7 +16,15 @@ class AppStrings {
   static String retry = "إعادة المحاولة";
   static String errorFetchingPlans = "عذراً، حدث خطأ أثناء تحميل الباقات";
   static String doubleViews = "ضعف عدد \nالمشاهدات";
+  static String exploreOffers = "أستكشف العروض";
+  static String all = "الكل";
+  static String errorFetchingData = "حدث خطأ أثناء جلب البيانات.";
+  static String freeShipping = "شحن مجانى";
+  static String offerNow = "لأى عرض تطلبه دلوقتى !";
+  static String failedToLoadCategories = "فشل في تحميل الأقسام";
+  static String noCategoriesAvailable = "لا توجد أقسام متاحة";
+  static String failedToLoadProducts = "فشل في تحميل المنتجات";
+  static String failedToFilterProducts = "فشل في تصفية المنتجات";
+  static String noProductsAvailable = "لا توجد منتجات متاحة حالياً";
+  static String noFilteredProducts = "لا توجد منتجات مطابقة لخيارات الفلترة";
 }
-/*
-
- */

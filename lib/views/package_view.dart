@@ -6,6 +6,8 @@ import 'package:otex_app/controller/plan_state.dart';
 import 'package:otex_app/helper/app_strings.dart';
 import 'package:otex_app/helper/app_styles.dart';
 import 'package:otex_app/helper/widgets/custom_btn.dart';
+import 'package:otex_app/helper/widgets/empty_state_widget.dart';
+import 'package:otex_app/helper/widgets/error_state_widget.dart';
 import 'package:otex_app/widgets/package_view/app_bar.dart';
 import 'package:otex_app/widgets/package_view/plan_card.dart';
 import 'package:otex_app/widgets/package_view/plan_card_shimmer.dart';
@@ -26,9 +28,9 @@ class PackageView extends StatelessWidget {
             return (state is PlanLoading)
                 ? _buildPlanLoadingStateWidget()
                 : (state is PlanEmpty)
-                    ? _buildPlanEmptyStateWidget()
+                    ? EmptyStateWidget(imageUrl: "https://cdn-icons-png.flaticon.com/512/4946/4946348.png", message: AppStrings.noPlansAvailable)
                     : (state is PlanError)
-                        ? _buildPlanErrorStateWidget(context)
+                        ? errorStateWidget(context: context, message: AppStrings.errorFetchingPlans, onTap: () => context.read<PlanCubit>().getPlans())
                         : (state is PlanLoaded)
                             ? _buildPlanLoadedStateWidget(state)
                             : SizedBox.shrink();
@@ -68,38 +70,6 @@ class PackageView extends StatelessWidget {
         Gap(8),
         CustomBtn(label: AppStrings.next),
         Gap(12),
-      ],
-    );
-  }
-
-  Widget _buildPlanErrorStateWidget(BuildContext context) {
-    return Align(
-      alignment: Alignment.center,
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          mainAxisSize: MainAxisSize.max,
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Image.network("https://cdn-icons-png.flaticon.com/512/2797/2797387.png", width: 70),
-            Gap(12),
-            Text(AppStrings.errorFetchingPlans, style: AppStyles.font16BlackMedium),
-            const Gap(32),
-            IntrinsicWidth(child: CustomBtn(label: AppStrings.retry, onTap: () => context.read<PlanCubit>().getPlans())),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildPlanEmptyStateWidget() {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Image.network("https://cdn-icons-png.flaticon.com/512/4946/4946348.png", width: 100),
-        Gap(8),
-        Center(child: Text(AppStrings.noPlansAvailable, style: AppStyles.font10BlackRegular)),
       ],
     );
   }

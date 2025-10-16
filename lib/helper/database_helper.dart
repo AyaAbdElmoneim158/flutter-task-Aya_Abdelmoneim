@@ -22,7 +22,7 @@ class DatabaseHelper {
 
     return await openDatabase(
       path,
-      version: 15, // ← Increment version
+      version: 15,
       onCreate: (db, version) async {
         await _createTables(db);
       },
@@ -42,6 +42,7 @@ class DatabaseHelper {
         name TEXT
       )
     ''');
+
     await db.execute('''
       CREATE TABLE products(
         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -56,29 +57,16 @@ class DatabaseHelper {
     ''');
 
     await db.execute('''
-    CREATE TABLE plans (
-      id INTEGER PRIMARY KEY,
-      name TEXT,
-      description TEXT,
-      price REAL,           
-      isSelected INTEGER,
-      viewsNumber INTEGER,   
-      features TEXT
-    )
-  ''');
-  }
-
-  Future<void> debugTableSchema() async {
-    try {
-      final db = await database;
-      final tableInfo = await db.rawQuery('PRAGMA table_info(plans)');
-      print('Plans table schema:');
-      for (var column in tableInfo) {
-        print('Column: ${column['name']} - Type: ${column['type']}');
-      }
-    } catch (e) {
-      print('Error reading table schema: $e');
-    }
+      CREATE TABLE plans (
+        id INTEGER PRIMARY KEY,
+        name TEXT,
+        description TEXT,
+        price REAL,           
+        isSelected INTEGER,
+        viewsNumber INTEGER,   
+        features TEXT
+      )
+    ''');
   }
 
   Future<int> insertCategory(Category category) async {
@@ -97,68 +85,21 @@ class DatabaseHelper {
     return await db.insert('products', product.toMap());
   }
 
-  // Future<List<Product>> getProductsByCategory(int categoryId) async {
-  //   final db = await database;
-  //   final maps = await db.query(
-  //     'products',
-  //     where: 'categoryId = ?',
-  //     whereArgs: [categoryId],
-  //   );
-  //   return List.generate(maps.length, (i) => Product.fromMap(maps[i]));
-  // }
-
-  // Future<int> insertPlan(Plan plan) async {
-  //   final db = await database;
-  //   final data = plan.toMap();
-  //   data['features'] = jsonEncode(data['features']);
-  //   return await db.insert(
-  //     'plans',
-  //     data,
-  //     conflictAlgorithm: ConflictAlgorithm.replace,
-  //   );
-  // }
-  // Future<int> insertPlan(Plan plan) async {
-  //   final db = await database;
-  //   final data = plan.toMap();
-  //   // Convert features list to JSON string
-  //   data['features'] = jsonEncode(plan.features.map((f) => f.toMap()).toList());
-  //   return await db.insert(
-  //     'plans',
-  //     data,
-  //     // conflictAlgorithm: ConflictAlgorithm.replace,
-  //   );
-  // }
-
   Future<int> insertPlan(Plan plan) async {
-    try {
-      final db = await database;
+    final db = await database;
+    final data = {
+      'id': plan.id,
+      'name': plan.name,
+      'description': plan.description,
+      'price': plan.price,
+      'isSelected': plan.isSelected ? 1 : 0,
+    };
 
-      // Create a clean map without the features list
-      final data = {
-        'id': plan.id,
-        'name': plan.name,
-        'description': plan.description,
-        'price': plan.price,
-        'isSelected': plan.isSelected ? 1 : 0, // Convert boolean to integer
-      };
+    final featuresJson = jsonEncode(plan.features.map((f) => f.toMap()).toList());
+    data['features'] = featuresJson;
 
-      // Convert features to JSON separately
-      final featuresJson = jsonEncode(plan.features.map((f) => f.toMap()).toList());
-      data['features'] = featuresJson;
-
-      print('Inserting plan: ${plan.name}');
-      print('Price: ${plan.price}');
-      print('isSelected: ${plan.isSelected}');
-      print('Features JSON length: ${featuresJson.length}');
-
-      final result = await db.insert('plans', data);
-      print('Successfully inserted plan with id: $result');
-      return result;
-    } catch (e) {
-      print('Error inserting plan ${plan.name}: $e');
-      print('Stack trace: ${StackTrace.current}');
-      rethrow;
-    }
+    final result = await db.insert('plans', data);
+    return result;
   }
 
   Future<List<Plan>> getAllPlans() async {
@@ -174,12 +115,11 @@ class DatabaseHelper {
         name: maps[i]['name'],
         description: maps[i]['description'],
         price: maps[i]['price'],
-        isSelected: maps[i]['isSelected'] == 1, // ← Convert back to boolean
+        isSelected: maps[i]['isSelected'] == 1,
         features: features,
       );
     });
   }
-// Add these methods to your DatabaseHelper class if they don't exist
 
   Future<List<Product>> getAllProducts() async {
     final db = await database;
@@ -195,36 +135,6 @@ class DatabaseHelper {
       whereArgs: [categoryId],
     );
     return List.generate(maps.length, (i) => Product.fromMap(maps[i]));
-  }
-
-// Add this method to debug all tables
-  Future<void> debugAllTables() async {
-    try {
-      final db = await database;
-
-      // Check plans table
-      final plansInfo = await db.rawQuery('PRAGMA table_info(plans)');
-      print('Plans table schema:');
-      for (var column in plansInfo) {
-        print('  Column: ${column['name']} - Type: ${column['type']}');
-      }
-
-      // Check categories table
-      final categoriesInfo = await db.rawQuery('PRAGMA table_info(categories)');
-      print('Categories table schema:');
-      for (var column in categoriesInfo) {
-        print('  Column: ${column['name']} - Type: ${column['type']}');
-      }
-
-      // Check products table
-      final productsInfo = await db.rawQuery('PRAGMA table_info(products)');
-      print('Products table schema:');
-      for (var column in productsInfo) {
-        print('  Column: ${column['name']} - Type: ${column['type']}');
-      }
-    } catch (e) {
-      print('Error reading table schemas: $e');
-    }
   }
 
   Future close() async {

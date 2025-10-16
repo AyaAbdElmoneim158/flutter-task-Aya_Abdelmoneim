@@ -7,78 +7,96 @@ import 'package:otex_app/models/product.dart';
 class HomeCubit extends Cubit<HomeState> {
   HomeCubit() : super(HomeInitial());
 
+  List<Category> _categories = [];
+  List<Product> _allProducts = [];
+  List<Product> _filteredProducts = [];
+  int _selectedCategoryIndex = 0;
+
   Future<void> loadInitialData() async {
     emit(HomeLoading());
     try {
-      // Load categories and products
-      final categories = await _getCategories();
-      final products = await _getProducts();
-
-      emit(HomeLoaded(
-        categories: categories,
-        products: products,
-        selectedCategoryIndex: 0,
-      ));
+      await Future.wait([loadCategories(), loadProducts()]);
+      _emitCombinedState();
     } catch (e) {
       emit(HomeError('Failed to load data: $e'));
     }
   }
 
+  Future<void> loadCategories() async {
+    emit(CategoriesHomeLoading());
+    try {
+      _categories = await DatabaseHelper().getAllCategories();
+      if (_categories.isEmpty) {
+        emit(CategoriesHomeEmpty());
+      } else {
+        emit(CategoriesHomeLoaded(_categories));
+      }
+    } catch (e) {
+      emit(CategoriesHomeError('Failed to load categories: $e'));
+    }
+  }
+
+  Future<void> loadProducts() async {
+    emit(ProductsHomeLoading());
+    try {
+      _allProducts = await DatabaseHelper().getAllProducts();
+      _filteredProducts = List.from(_allProducts);
+
+      if (_allProducts.isEmpty) {
+        emit(ProductsHomeEmpty());
+      } else {
+        emit(ProductsHomeLoaded(_filteredProducts));
+      }
+    } catch (e) {
+      emit(ProductsHomeError('Failed to load products: $e'));
+    }
+  }
+
   void selectCategory(int index) {
-    if (state is HomeLoaded) {
-      final currentState = state as HomeLoaded;
-      emit(currentState.copyWith(selectedCategoryIndex: index));
-
-      // Optionally filter products based on selected category
-      _filterProductsByCategory(currentState.categories[index].id!);
+    if (index >= 0 && index < _categories.length) {
+      _selectedCategoryIndex = index;
+      _filterProducts();
     }
   }
 
-  void updateSearchQuery(String query) {
-    if (state is HomeLoaded) {
-      final currentState = state as HomeLoaded;
-      emit(currentState.copyWith(searchQuery: query));
-      _filterProductsBySearch(query);
+  void _filterProducts() async {
+    emit(FilterProductsHomeLoading());
+    try {
+      List<Product> filtered = List.from(_allProducts);
+      if (_selectedCategoryIndex > 0) {
+        final categoryId = _categories[_selectedCategoryIndex].id;
+        filtered = filtered.where((product) => product.categoryId == categoryId).toList();
+      }
+      _filteredProducts = filtered;
+      if (filtered.isEmpty) {
+        emit(FilterProductsHomeEmpty());
+      } else {
+        emit(FilterProductsHomeLoaded(filtered));
+      }
+    } catch (e) {
+      emit(FilterProductsHomeError('Failed to filter products: $e'));
     }
   }
 
-  Future<List<Category>> _getCategories() async {
-    // Replace with your actual data fetching logic
-    final categories = await DatabaseHelper().getAllCategories();
-    return Category.categories;
-  }
-
-  Future<List<Product>> _getProducts() async {
-    // Replace with your actual data fetching logic
-    final products = await DatabaseHelper().getAllProducts();
-    return products; // Return your actual products
-  }
-
-  void _filterProductsByCategory(int categoryId) async {
-    if (state is HomeLoaded) {
-      final currentState = state as HomeLoaded;
-      // Implement category-based filtering logic here
-      final filteredProducts = await DatabaseHelper().getProductsByCategory(categoryId);
-      emit(currentState.copyWith(products: filteredProducts));
+  void _emitCombinedState() {
+    if (_filteredProducts.isNotEmpty) {
+      emit(ProductsHomeLoaded(_filteredProducts));
+    } else {
+      emit(ProductsHomeEmpty());
     }
   }
 
-  void _filterProductsBySearch(String query) {
-    if (state is HomeLoaded) {
-      final currentState = state as HomeLoaded;
-      // Implement search filtering logic here
-      // final filteredProducts = ...;
-      // emit(currentState.copyWith(products: filteredProducts));
-    }
+  List<Category> get categories => _categories;
+  List<Product> get filteredProducts => _filteredProducts;
+  List<Product> get allProducts => _allProducts;
+  int get selectedCategoryIndex => _selectedCategoryIndex;
+
+  Future<void> refreshCategories() async {
+    await loadCategories();
   }
 
-  // Get filtered products based on current state
-  List<Product> get filteredProducts {
-    if (state is HomeLoaded) {
-      final currentState = state as HomeLoaded;
-      // Add your filtering logic here
-      return currentState.products;
-    }
-    return [];
+  Future<void> refreshProducts() async {
+    await loadProducts();
+    _filterProducts();
   }
 }

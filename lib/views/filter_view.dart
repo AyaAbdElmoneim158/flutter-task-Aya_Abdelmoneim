@@ -15,9 +15,9 @@ class FilterView extends StatefulWidget {
 
 class _FilterViewState extends State<FilterView> {
   int selectedTypes = 0;
-  int selectedRooms = 0;
-  int selectedPaymentWays = 0;
-  int selectedPropertyStates = 0;
+  int selectedRooms = 1;
+  int selectedPaymentWays = 2;
+  int selectedPropertyStates = 1;
 
   List<String> types = ['الكل', 'توين هاوس', 'فيلا منفصلة', 'تاون هاوس'];
   List<String> rooms = ['4 غرف', '5 غرف', 'الكل', 'غرفتين', '3 غرف'];
@@ -36,7 +36,7 @@ class _FilterViewState extends State<FilterView> {
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text("فلترة", style: AppStyles.font24BlackMedium),
+            // Text("فلترة", style: AppStyles.font24BlackMedium),
             GestureDetector(
               onTap: () {
                 // Reset all filters to default
@@ -52,6 +52,7 @@ class _FilterViewState extends State<FilterView> {
                 style: AppStyles.font16GrayBold.copyWith(color: AppColors.primary),
               ),
             ),
+            Text("فلترة", style: AppStyles.font24BlackMedium),
           ],
         ),
       ),
@@ -60,142 +61,153 @@ class _FilterViewState extends State<FilterView> {
         child: SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.all(16.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // AlertContainer(),
-                // const Gap(16),
-                // SpecialPlan(),
-                const Gap(16),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Row(children: [
-                      Icon(Icons.location_on_outlined, color: AppColors.black),
-                      Column(
-                        children: [
-                          Text("الموقع", style: AppStyles.font14BlackMedium),
-                          Text("مصر", style: AppStyles.font12BlackRegular.copyWith(color: AppColors.black.withOpacity(0.5))),
-                        ],
-                      ),
-                    ]),
-                    Icon(Icons.arrow_forward_ios, color: AppColors.black, size: 12),
-                  ],
-                ),
-                const Gap(16),
+            child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              const Gap(16),
 
-                _buildSectionHeader('الفئة'),
-                const Gap(16),
-                Row(
-                  children: [],
-                ),
-                Divider(color: AppColors.black.withOpacity(0.1)),
-
-                // Monthly Installments Section
-                _buildSectionHeader('الأقساط الشهرية'),
-                Row(
-                  spacing: 16,
-                  children: [CustomField(), CustomField()],
-                ),
-                const Gap(8),
-                Divider(color: AppColors.black.withOpacity(0.1)),
-
-                // Type Section
-                _buildSectionHeader('النوع'),
-                const Gap(8),
-                _buildHorizontalList(
-                  items: types,
-                  selectedIndex: selectedTypes,
-                  onItemSelected: (index) {
-                    setState(() {
-                      selectedTypes = index;
-                    });
-                  },
-                ),
-                const Gap(16),
-                Divider(color: AppColors.black.withOpacity(0.1)),
-
-                // Rooms Section
-                _buildSectionHeader('عدد الغرف'),
-                const Gap(8),
-                _buildHorizontalList(
-                  items: rooms,
-                  selectedIndex: selectedRooms,
-                  onItemSelected: (index) {
-                    setState(() {
-                      selectedRooms = index;
-                    });
-                  },
-                ),
-                const Gap(16),
-                Divider(color: AppColors.black.withOpacity(0.1)),
-
-                // Price Section
-                _buildSectionHeader('السعر'),
-                const Gap(16),
-                Row(
-                  spacing: 16,
-                  children: [CustomField(hintText: 'أقل سعر'), CustomField(hintText: 'أقصى سعر')],
-                ),
-                Divider(color: AppColors.black.withOpacity(0.1)),
-
-                // Payment Method Section
-                _buildSectionHeader('طريقة الدفع'),
-                const Gap(8),
-                _buildHorizontalList(
-                  items: paymentWays,
-                  selectedIndex: selectedPaymentWays,
-                  onItemSelected: (index) {
-                    setState(() {
-                      selectedPaymentWays = index;
-                    });
-                  },
-                ),
-                const Gap(16),
-                Divider(color: AppColors.black.withOpacity(0.1)),
-
-                // Property State Section
-                _buildSectionHeader('حالة العقار'),
-                const Gap(8),
-                _buildHorizontalList(
-                  items: propertyStates,
-                  selectedIndex: selectedPropertyStates,
-                  onItemSelected: (index) {
-                    setState(() {
-                      selectedPropertyStates = index;
-                    });
-                  },
-                ),
-                const Gap(16),
-                Divider(color: AppColors.black.withOpacity(0.1)),
-
-                // Apply Filter Button
-                const Gap(32),
-                SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton(
-                    onPressed: () {
-                      // Apply filters logic
-                      _applyFilters();
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: AppColors.primary,
-                      padding: const EdgeInsets.symmetric(vertical: 16),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
-                      ),
+              _buildSectionHeader('الفئة'),
+              const Gap(16),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Row(children: [
+                    Icon(Icons.approval, color: AppColors.secondary),
+                    Column(
+                      children: [
+                        Text("عقارات", style: AppStyles.font14BlackMedium),
+                        Text("فلل للبيع", style: AppStyles.font12BlackRegular.copyWith(color: AppColors.black.withOpacity(0.5))),
+                      ],
                     ),
-                    child: Text(
-                      'شاهد 10,000+ نتائج',
-                      style: AppStyles.font16GrayBold.copyWith(
-                        color: Colors.white,
-                      ),
+                  ]),
+                  // Icon(Icons.arrow_forward_ios, color: AppColors.black, size: 12),
+                  Text(
+                    "تغير",
+                    style: AppStyles.font14BlackMedium.copyWith(color: AppColors.primary),
+                  )
+                ],
+              ),
+              Divider(color: AppColors.black.withOpacity(0.1)),
+
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Row(children: [
+                    Icon(Icons.location_on_outlined, color: AppColors.black),
+                    Column(
+                      children: [
+                        Text("الموقع", style: AppStyles.font14BlackMedium),
+                        Text("مصر", style: AppStyles.font12BlackRegular.copyWith(color: AppColors.black.withOpacity(0.5))),
+                      ],
+                    ),
+                  ]),
+                  Icon(Icons.arrow_forward_ios, color: AppColors.black, size: 12),
+                ],
+              ),
+
+              Divider(color: AppColors.black.withOpacity(0.1)),
+
+              _buildSectionHeader('الأقساط الشهرية'),
+              Row(
+                spacing: 16,
+                children: [CustomField(), CustomField()],
+              ),
+              const Gap(8),
+              Divider(color: AppColors.black.withOpacity(0.1)),
+
+              // Type Section
+              _buildSectionHeader('النوع'),
+              const Gap(8),
+              _buildHorizontalList(
+                items: types,
+                selectedIndex: selectedTypes,
+                onItemSelected: (index) {
+                  setState(() {
+                    selectedTypes = index;
+                  });
+                },
+              ),
+              const Gap(16),
+              Divider(color: AppColors.black.withOpacity(0.1)),
+
+              // Rooms Section
+              _buildSectionHeader('عدد الغرف'),
+              const Gap(8),
+              _buildHorizontalList(
+                items: rooms,
+                selectedIndex: selectedRooms,
+                onItemSelected: (index) {
+                  setState(() {
+                    selectedRooms = index;
+                  });
+                },
+              ),
+              const Gap(16),
+              Divider(color: AppColors.black.withOpacity(0.1)),
+
+              // Price Section
+              _buildSectionHeader('السعر'),
+              const Gap(16),
+              Row(
+                spacing: 16,
+                children: [CustomField(hintText: 'أقل سعر'), CustomField(hintText: 'أقصى سعر')],
+              ),
+              Divider(color: AppColors.black.withOpacity(0.1)),
+
+              // Payment Method Section
+              _buildSectionHeader('طريقة الدفع'),
+              const Gap(8),
+              _buildHorizontalList(
+                items: paymentWays,
+                selectedIndex: selectedPaymentWays,
+                onItemSelected: (index) {
+                  setState(() {
+                    selectedPaymentWays = index;
+                  });
+                },
+              ),
+              const Gap(16),
+              Divider(color: AppColors.black.withOpacity(0.1)),
+
+              // Property State Section
+              _buildSectionHeader('حالة العقار'),
+              const Gap(8),
+              _buildHorizontalList(
+                items: propertyStates,
+                selectedIndex: selectedPropertyStates,
+                onItemSelected: (index) {
+                  setState(() {
+                    selectedPropertyStates = index;
+                  });
+                },
+              ),
+              const Gap(16),
+              Divider(color: AppColors.black.withOpacity(0.1)),
+
+              // Apply Filter Button
+              const Gap(32),
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: () {
+                    // Apply filters logic
+                    _applyFilters();
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppColors.primary,
+                    padding: const EdgeInsets.symmetric(vertical: 16),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                  ),
+                  child: Text(
+                    'شاهد 10,000+ نتائج',
+                    style: AppStyles.font16GrayBold.copyWith(
+                      color: Colors.white,
                     ),
                   ),
                 ),
-                const Gap(16),
-              ],
-            ),
+              ),
+              const Gap(16),
+            ]),
           ),
         ),
       ),
